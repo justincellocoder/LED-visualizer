@@ -79,7 +79,7 @@ void draw() {
   f = 255;
   
   //setup directional light unless volume is at the loudest range
-  if(scale < 200){
+  if(scale < 150){
   directionalLight(204, 204, 204, 0, 0, -1);
   }
   
