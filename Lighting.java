@@ -10,11 +10,14 @@ AudioIn input;
 Amplitude rms;
 int scale=1;
 int colorScale=1;
+int time=1;
 
 //"a" will be for rotating, smooth will smooth out scale, other variables for color
 float a = 0.0;
 float smooth;
 float r,g,b,d,f;
+float loud, soft;
+float i;
 
 void setup() {
   size(500, 500, P3D);
@@ -27,6 +30,7 @@ void setup() {
   //setup connection to OPC code
   opc = new OPC(this, "127.0.0.1", 7890);
   opc.ledGrid8x8(0, width/2, height/2, height / 12.0, 0, false);
+  //opc.ledStrip(0, 64, width/2, height/2, width / 70.0, 0, false);
 }
 
 void draw() {  
@@ -38,6 +42,21 @@ void draw() {
   //the third and fourth parameters control the start and end size of the objects
   scale=int(map(rms.analyze(), 0, .05, 80, 1000));
     noStroke();
+    
+  println("scale is " + scale);
+  println("smooth is " + smooth);
+  
+  time = int(millis());
+   
+  if (smooth > 200 && time%6000 == 0){
+     smooth = 150;
+  }
+  if (smooth > 200 && time%8000 == 0){
+     smooth = 200;
+  }
+  if (scale < 100 && time%6000 ==0){
+     smooth = 80; 
+  }
   
   //smooths the output from scale
   //the smaller the decimal number, the longer it takes to change size
@@ -79,7 +98,7 @@ void draw() {
   f = 255;
   
   //setup directional light unless volume is at the loudest range
-  if(scale < 150){
+  if(smooth < 200){
   directionalLight(204, 204, 204, 0, 0, -1);
   }
   
